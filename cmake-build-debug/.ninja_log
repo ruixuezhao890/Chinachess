@@ -1,0 +1,22 @@
+# ninja log v5
+1	377	7086832213728395	CMakeFiles/Chess.dir/main.cpp.obj	7868b2dc3cc26df9
+377	550	7086832215428780	Chess.exe	dbc39ce83d9ec51e
+1	408	7086831491896502	CMakeFiles/Chess.dir/Myboard.cpp.obj	62104c87fc57986b
+1	188	7086712189909488	build.ninja	b498d588ed69c1d7
+11	117	7086813718594293	CMakeFiles/Chess.dir/chess.cpp.obj	1da037fd421e1dd8
+8	401	7086843626114120	CMakeFiles/Chess.dir/main.cpp.obj	7868b2dc3cc26df9
+2	415	7086843626244153	CMakeFiles/Chess.dir/Myboard.cpp.obj	62104c87fc57986b
+415	595	7086843628009838	Chess.exe	dbc39ce83d9ec51e
+2	385	7086843758917254	CMakeFiles/Chess.dir/main.cpp.obj	7868b2dc3cc26df9
+386	558	7086843760620352	Chess.exe	dbc39ce83d9ec51e
+1	396	7086844538689733	CMakeFiles/Chess.dir/Myboard.cpp.obj	62104c87fc57986b
+396	568	7086844540386777	Chess.exe	dbc39ce83d9ec51e
+1	395	7086845678263278	CMakeFiles/Chess.dir/main.cpp.obj	7868b2dc3cc26df9
+6	408	7086845678403310	CMakeFiles/Chess.dir/Myboard.cpp.obj	62104c87fc57986b
+408	582	7086845680103694	Chess.exe	dbc39ce83d9ec51e
+7	392	7086849658630471	CMakeFiles/Chess.dir/main.cpp.obj	7868b2dc3cc26df9
+2	411	7086849658820514	CMakeFiles/Chess.dir/Myboard.cpp.obj	62104c87fc57986b
+411	585	7086849660523619	Chess.exe	dbc39ce83d9ec51e
+3	503	7086861337544146	CMakeFiles/Chess.dir/main.cpp.obj	7868b2dc3cc26df9
+11	520	7086861337714187	CMakeFiles/Chess.dir/Myboard.cpp.obj	62104c87fc57986b
+520	729	7086861339770361	Chess.exe	dbc39ce83d9ec51e
