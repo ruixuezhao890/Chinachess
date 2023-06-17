@@ -30,6 +30,7 @@ enum flag{
 class MyBoard{
 public:
     MyBoard();
+    void drawBoard();
     void BoardInit();
     void ChessInit();
     void drawChess();

@@ -24,9 +24,9 @@ MyBoard::MyBoard() {
     this->BoardInit();
     this->ChessInit();
 }
-
-//绘制棋盘以及对棋盘数组初始化
-void MyBoard::BoardInit() {
+//绘制棋盘
+void MyBoard::drawBoard()
+{
     setbkcolor(RGB(252, 215, 162));
     cleardevice();
 
@@ -59,7 +59,11 @@ void MyBoard::BoardInit() {
     //画下面
     line(3 * CHESS_GRID_SIZE + INTERVAL, 7 * CHESS_GRID_SIZE + INTERVAL, 5 * CHESS_GRID_SIZE + INTERVAL, 9 * CHESS_GRID_SIZE + INTERVAL);
     line(3 * CHESS_GRID_SIZE + INTERVAL, 9 * CHESS_GRID_SIZE+INTERVAL,5*CHESS_GRID_SIZE+INTERVAL,7*CHESS_GRID_SIZE+INTERVAL);
+}
+//绘制棋盘以及对棋盘数组初始化
+void MyBoard::BoardInit() {
 
+    this->drawBoard();
 
     for (int i = 0; i < ROW; ++i) {
         for (int j = 0; j < COL; ++j) {
@@ -128,6 +132,7 @@ void MyBoard::TestPrint() {
     for (int i = 0; i < ROW; ++i) {
         for (int j = 0; j < COL; ++j) {
             std::cout<<this->map[i][j].getid();
+            std::cout<<"  ";
         }
         std::cout<<std::endl;
     }
@@ -197,10 +202,50 @@ void MyBoard::mouseEvent() {
 }
 //棋子移动
 void MyBoard::ChessMove() {
+    bool canMove= false;
     if (!((state.begr==state.endr)&&(state.begc==state.endc))
     &&state.endr!=-1&&state.endc!=-1
     &&map[state.begr][state.begc].getid()!=-1){
 
+        switch (map[state.begr][state.begc].getid()) {
+            case 0://车
+            case 7:
+                if (state.begr==state.endr||state.begc==state.endc){
+                    canMove= true;
+                }
+                break;
+            case 1://马
+            case 8:
+                break;
+            case 2://象
+            case 9:
+                break;
+            case 3://仕
+            case 10:
+                break;
+            case 4://帅
+            case 11:
+                break;
+            case 5://炮
+            case 12:
+                break;
+            case 6://兵
+            case 13:
+                break;
+
+        }
+
+        if (canMove){
+            map[state.endr][state.endc].setid(map[state.begr][state.begc].getid()) ;
+            map[state.begr][state.begc].setid(-1);
+            map[state.begr][state.begc].setIsriver(map[state.endr][state.endc].getIsriver()) ;
+            //map[state.begr][state.begc].setIsriver(map[state.begr][state.begc].getIsriver());
+            map[state.endr][state.endc].setType(map[state.begr][state.begc].gettype()) ;
+            //this->TestPrint();
+            this->drawBoard();
+            //this->drawChess();
+
+        }
     }
 }
 
