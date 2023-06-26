@@ -200,6 +200,48 @@ void MyBoard::mouseEvent() {
 
 
 }
+
+int MyBoard::IshasChess(struct state* state1)
+{
+#if TEST
+   this->TestPrint();
+#endif
+    int cnt=0;
+    int temp=0;
+    if (state1->begc!=state1->endc&&state1->begr!=state1->endr)
+        return 0;
+//    if (state1->begr>4){
+        if (state1->begc==state1->endc) {//判断列是否相等
+//            temp=state1->begr>state1->endr?state1->begr-state1->endr:state1->endr-state1->begr;
+            if (state1->begr > state1->endr) {
+                for (int i = state1->begr; i > state1->endr; i--) {
+                    if (this->map[i - 1][state1->endc].getid() != -1) {
+                        cnt++;
+                    }
+                }
+            }else
+            {
+                for (int i = state1->begr; i < state1->endr; i++) {
+                    if (this->map[i + 1][state1->endc].getid() != -1) {
+                        cnt++;
+                    }
+                }
+            }
+        }
+
+//        else{//判断行相等
+//            for (int i = state1->begr; i < state1->endr; ++i) {
+//                if(this->map[state1->endc][i].getid()!=-1)
+//                {
+//                    cnt++;
+//                }
+//            }
+//    }
+//    }
+
+    return cnt;
+
+}
 //棋子移动
 void MyBoard::ChessMove() {
     bool canMove= false;
@@ -211,6 +253,7 @@ void MyBoard::ChessMove() {
             case 0://车
             case 7:
                 if (state.begr==state.endr||state.begc==state.endc){
+                    if (this->IshasChess(&this->state)==0||map[state.endr][state.endc].gettype()==BLACK)
                     canMove= true;
                 }
                 break;
@@ -238,14 +281,15 @@ void MyBoard::ChessMove() {
         if (canMove){
             map[state.endr][state.endc].setid(map[state.begr][state.begc].getid()) ;
             map[state.begr][state.begc].setid(-1);
-            map[state.begr][state.begc].setIsriver(map[state.endr][state.endc].getIsriver()) ;
+            map[state.endr][state.endc].setIsriver(map[state.begr][state.begc].getIsriver()) ;
             //map[state.begr][state.begc].setIsriver(map[state.begr][state.begc].getIsriver());
             map[state.endr][state.endc].setType(map[state.begr][state.begc].gettype()) ;
-            //this->TestPrint();
             this->drawBoard();
-            //this->drawChess();
+
 
         }
     }
 }
+
+
 

@@ -35,6 +35,7 @@ public:
     void ChessInit();
     void drawChess();
     void TestPrint();
+
     void mouseEvent();
     void ChessMove();
 private:
@@ -52,6 +53,8 @@ private:
         int endc;
         int State;
     }state={-1,-1,-1,-1,Begin};
+public:
+    int IshasChess(struct state* state1);
 };
 #endif //CHESS_MYBOARD_H
 
