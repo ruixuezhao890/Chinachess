@@ -19,8 +19,6 @@
 MyBoard::MyBoard() {
 
     initgraph(740,820,1);
-/*    loadimage(&this->image,_T("D:\\CODE\\cpp_code\\Chess\\res\\chessboard.png"),740,820);
-    putimage(0,0,&this->image);*/
     this->BoardInit();
     this->ChessInit();
 }
@@ -29,7 +27,6 @@ void MyBoard::drawBoard()
 {
     setbkcolor(RGB(252, 215, 162));
     cleardevice();
-
     setlinecolor(BLACK);
     setlinestyle(PS_SOLID, 2);
     for (int i = 0; i < 10; i++)
@@ -77,9 +74,9 @@ void MyBoard::ChessInit() {
     for (int i = 0; i < ROW; ++i) {
         size_t temp=0;
         for (int j = 0; j < COL; ++j) {
-            //map[i][j].setid(0);
+            map[i][j].setType(-2);
             if (i<=4){//此时为黑棋
-                map[i][j].setType(BLACK);
+
                 if (i==0){//放置第一行的棋子
                     //0 1 2 3 4 3 2 1 0
                     if (j<=4){
@@ -98,9 +95,13 @@ void MyBoard::ChessInit() {
                 {
                     map[i][j].setid(this->Blackchessid[6]);
                 }
+                if (  map[i][j].getid()!=-1)
+                {
+                    map[i][j].setType(BLACK);
+                }
             }
             else{
-                map[i][j].setType(RED);
+//                map[i][j].setType(RED);
                 if (i==9){//放置第一行的棋子
                     //0 1 2 3 4 3 2 1 0
                     if (j<=4){
@@ -118,6 +119,10 @@ void MyBoard::ChessInit() {
                 if (i == 6 && j% 2 == 0)//兵
                 {
                     map[i][j].setid(this->REDchessid[6]);
+                }
+                if (  map[i][j].getid()!=-1)
+                {
+                    map[i][j].setType(RED);
                 }
             }
            map[i][j].setIsriver(false);
@@ -200,26 +205,67 @@ void MyBoard::mouseEvent() {
 
 
 }
+int MyBoard::HorseNearhasChess(struct state* state1)
+{
+    int cnt=0;
+    if (state1->begr-state1->endr==2){
+        if (map[state1->begr-1][state1->begc].getid()!=-1)
+        {
+          cnt=1;
+        }
+    }
+    else if (state1->endr-state1->begr==2){
+        if (map[state1->begr+1][state1->begc].getid()!=-1)
+        {
+            cnt=1;
+        }
+    }
+    else if (state1->begc-state1->endc==2){
+        if (map[state1->begr][state1->begc-1].getid()!=-1)
+        {
+            cnt=1;
+        }
+    }
+    else if (state1->endc-state1->begc==2){
+        if (map[state1->begr][state1->begc+1].getid()!=-1)
+        {
+            cnt=1;
+        }
+    }
+     if (this->map[state1->begr][state1->begc].gettype()==this->map[state1->endr][state1->endc].gettype())
+    {
 
+//#if TEST
+//        std::cout<<this->map[state1->begr][state1->begc].gettype()<<"   "<<this->map[state1->endr][state1->endc].gettype()<<std::endl;
+//#endif
+        cnt=1;
+    }
+//#if TEST
+//    std::cout<<this->map[state1->begr][state1->begc].gettype()<<"   "<<this->map[state1->endr][state1->endc].gettype()<<std::endl;
+//#endif
+    std::cout<<"cnt:"<<cnt<<std::endl;
+    return cnt;
+
+
+}
 int MyBoard::IshasChess(struct state* state1)
 {
 #if TEST
    this->TestPrint();
 #endif
     int cnt=0;
-    int temp=0;
-    if (state1->begc!=state1->endc&&state1->begr!=state1->endr)
+    if (state1->begc!=state1->endc&&state1->begr!=state1->endr)//判断移动前的坐标与移动后是否重合 若重合则直接结束
         return 0;
-//    if (state1->begr>4){
         if (state1->begc==state1->endc) {//判断列是否相等
 //            temp=state1->begr>state1->endr?state1->begr-state1->endr:state1->endr-state1->begr;
-            if (state1->begr > state1->endr) {
+            if (state1->begr > state1->endr) {  //如果开始坐标大于结束坐标 则从大坐标往小坐标遍历看看是否有棋子
+                                                //例如 起始坐标9 0 结束坐标7 0 则列不动 从第八行开始遍历到第七行查看是否有棋子
                 for (int i = state1->begr; i > state1->endr; i--) {
                     if (this->map[i - 1][state1->endc].getid() != -1) {
                         cnt++;
                     }
                 }
-            }else
+            }else//如果开始坐标小于结束坐标 则从小坐标往大坐标遍历看看是否有棋子
             {
                 for (int i = state1->begr; i < state1->endr; i++) {
                     if (this->map[i + 1][state1->endc].getid() != -1) {
@@ -229,21 +275,73 @@ int MyBoard::IshasChess(struct state* state1)
             }
         }
 
-//        else{//判断行相等
-//            for (int i = state1->begr; i < state1->endr; ++i) {
-//                if(this->map[state1->endc][i].getid()!=-1)
-//                {
-//                    cnt++;
-//                }
-//            }
-//    }
-//    }
-
+        else{//判断行相等
+            if (state1->begc>state1->endc) {
+                for (int i = state1->begc; i > state1->endc; i--) {
+                    if (this->map[state1->endr][i-1].getid() != -1) {
+                        cnt++;
+                    }
+                }
+            }else
+            {
+                for (int i = state1->begc; i < state1->endc; i++) {
+                    if (this->map[state1->endr][i+1].getid() != -1) {
+                        cnt++;
+                    }
+                }
+            }
+    }
+    if (this->map[state1->begr][state1->begc].gettype()==this->map[state1->endr][state1->endc].gettype())
+    {
+        cnt=4;
+    }
+        std::cout<<"cnt:"<<cnt<<std::endl;
     return cnt;
 
 }
+int MyBoard::ElephantNearhasChess(struct state* state1){
+    int rnt=0;
+    if(map[(state.begr+state.endr)/2]
+          [(state.begc+state.endc)/2].getid()!=-1)
+    {
+        rnt=1;
+    }
+    this->IsRiver(state1);
+    if (map[state1->begr][state1->begc].getIsriver()== true){
+        rnt=1;
+    }
+    if (this->map[state1->begr][state1->begc].gettype()==this->map[state1->endr][state1->endc].gettype())
+    {
+        rnt=1;
+    }
+    return rnt;
+}
+void   MyBoard::IsRiver(struct state* state1)
+{
+    if (map[state1->begr][state1->begc].gettype()==RED){
+        if (state1->endr<=4){
+            map[state1->begr][state1->begc].setIsriver(true);
+        }
+        else{
+            map[state1->begr][state1->begc].setIsriver(false);
+        }
+    }
+    else{
+        if (state1->endr>=5){
+            map[state1->begr][state1->begc].setIsriver(true);
+        }
+        else{
+            map[state1->begr][state1->begc].setIsriver(false);
+        }
+    }
+}
+
 //棋子移动
 void MyBoard::ChessMove() {
+    this->TestPrint();
+    this->PrintChess();
+    int judeR=0;
+    int judeC=0;
     bool canMove= false;
     if (!((state.begr==state.endr)&&(state.begc==state.endc))
     &&state.endr!=-1&&state.endc!=-1
@@ -253,24 +351,52 @@ void MyBoard::ChessMove() {
             case 0://车
             case 7:
                 if (state.begr==state.endr||state.begc==state.endc){
-                    if (this->IshasChess(&this->state)==0||map[state.endr][state.endc].gettype()==BLACK)
+                    if (this->IshasChess(&this->state)==0||
+                    this->IshasChess(&this->state)==1&&map[state.endr][state.endc].gettype()!=map[state.begr][state.begc].gettype())
                     canMove= true;
+                    IsRiver(&state);
                 }
                 break;
             case 1://马
             case 8:
+                if (state.begr!=state.endr&&state.begc!=state.endc) {
+                    if (abs(state.begr-state.endr)==2&&abs(state.begc-state.endc)==1
+                    ||abs(state.begr-state.endr)==1&&abs(state.begc-state.endc)==2) {
+                        if (this->HorseNearhasChess(&this->state) == 0) {
+                            canMove = true;
+                            IsRiver(&state);
+                        }
+                    }
+                }
                 break;
             case 2://象
             case 9:
+                if (state.begr!=state.endr&&state.begc!=state.endc) {
+                    if (abs(state.begr-state.endr)==2&&abs(state.begc-state.endc)==2){
+                        if (this->ElephantNearhasChess(&state)==0){
+                            canMove = true;
+                        }
+
+                    }
+
+                }
                 break;
             case 3://仕
             case 10:
+                if (state.begr!=state.endr&&state.begc!=state.endc) {
+
+                }
                 break;
             case 4://帅
             case 11:
                 break;
             case 5://炮
             case 12:
+                if (state.begr==state.endr||state.begc==state.endc){
+                    if (this->IshasChess(&this->state)==0||this->IshasChess(&this->state)==2||
+                            (this->IshasChess(&this->state)==2&&map[state.endr][state.endc].gettype()!=map[state.begr][state.begc].gettype()))
+                        canMove= true;
+                }
                 break;
             case 6://兵
             case 13:
@@ -283,12 +409,22 @@ void MyBoard::ChessMove() {
             map[state.begr][state.begc].setid(-1);
             map[state.endr][state.endc].setIsriver(map[state.begr][state.begc].getIsriver()) ;
             //map[state.begr][state.begc].setIsriver(map[state.begr][state.begc].getIsriver());
+//            if (map[state.begr][state.begc].getIsriver()== false)
+            int temp=map[state.endr][state.endc].gettype();
             map[state.endr][state.endc].setType(map[state.begr][state.begc].gettype()) ;
+            map[state.begr][state.begc].setType(temp);
             this->drawBoard();
 
 
         }
     }
+}
+
+void MyBoard::PrintChess() {
+    std::cout<<"getid:"<<this->map[state.begr][state.begc].getid()<<std::endl;
+    std::cout<<"gettype:"<<this->map[state.begr][state.begc].gettype()<<std::endl;
+    std::cout<<"getIsriver:"<<this->map[state.begr][state.begc].getIsriver()<<std::endl;
+    //std::cout<<"getid:"<<this->map[state.begr][state.begc].getid()<<std::endl;
 }
 
 

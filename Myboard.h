@@ -17,6 +17,7 @@
 #include "easyx.h"
 #include "iostream"
 #include "chess.h"
+#include "math.h"
 #define ROW 10
 #define COL 9
 #define INTERVAL 50  //前面的间隔
@@ -35,7 +36,7 @@ public:
     void ChessInit();
     void drawChess();
     void TestPrint();
-
+    void PrintChess();
     void mouseEvent();
     void ChessMove();
 private:
@@ -55,6 +56,9 @@ private:
     }state={-1,-1,-1,-1,Begin};
 public:
     int IshasChess(struct state* state1);
+    int HorseNearhasChess(struct state* state1);
+    int ElephantNearhasChess(struct state* state1);
+    void  IsRiver(struct state* state1);
 };
 #endif //CHESS_MYBOARD_H
 
